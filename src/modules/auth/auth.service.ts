@@ -10,7 +10,6 @@ import {
 import { throwError, ERROR_CODES } from "../../common/errors";
 import { UserRepository } from "../user/user.repository";
 
-
 export interface IAuthService {
   signup(input: SignupInput): Promise<any>;
   login(input: LoginInput): Promise<any>;
@@ -45,21 +44,26 @@ export class AuthService implements IAuthService {
   }
 
   async login(input: LoginInput) {
-    const { email, password } = input;
+    try {
+      const { email, password } = input;
 
-    const user = await this.authRepo.findByEmail(email);
+      const user = await this.authRepo.findByEmail(email);
 
-    if (!user) {
-      throwError("Invalid credentials", ERROR_CODES.UNAUTHENTICATED);
+      if (!user) {
+        throwError("Invalid credentials", ERROR_CODES.UNAUTHENTICATED);
+      }
+
+      const isValid = await user?.comparePassword(password);
+
+      if (!isValid) {
+        throwError("Invalid credentials", ERROR_CODES.UNAUTHENTICATED);
+      }
+
+      return this.generateTokens(user);
+    } catch (err) {
+      console.error("Error during login:", err);
+      throw err;
     }
-
-    const isValid = await comparePassword(password, user?.password ?? "");
-
-    if (!isValid) {
-      throwError("Invalid credentials", ERROR_CODES.UNAUTHENTICATED);
-    }
-
-    return this.generateTokens(user);
   }
 
   private generateTokens(user: any) {

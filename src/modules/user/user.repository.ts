@@ -8,7 +8,7 @@ export interface IUserRepository {
 
 export class UserRepository implements IUserRepository {
   async findByEmail(email: string): Promise<IUser | null> {
-    return UserModel.findOne({ email });
+    return UserModel.findOne({ email }).select("+password");;
   }
 
   async create(data: any): Promise<IUser> {
