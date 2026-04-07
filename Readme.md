@@ -164,3 +164,126 @@ Comments inside Post ✅
 Orders inside User ✅
 
 ``
+
+
+///++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+🧠 GraphQL এ parent কী?
+
+👉 parent হলো আগের resolver যেটা return করেছে সেই data/object
+
+🔥 সহজ উদাহরণ
+
+ধরো তোমার schema:
+
+type Task {
+  id: ID!
+  title: String!
+  assignedTo: User!
+}
+Query
+query {
+  tasks {
+    id
+    title
+    assignedTo {
+      name
+    }
+  }
+}
+⚙️ কীভাবে flow চলে
+1️⃣ প্রথমে tasks resolver চলবে
+Query: {
+  tasks: () => {
+    return [
+      {
+        id: "1",
+        title: "Task 1",
+        assignedTo: "user123"
+      }
+    ];
+  }
+}
+
+👉 এখানে parent = ❌ undefined (কারণ এটা root level)
+
+2️⃣ তারপর Task.assignedTo resolver
+Task: {
+  assignedTo: (parent) => {
+    console.log(parent);
+  }
+}
+
+👉 এখানে parent কী?
+
+{
+  "id": "1",
+  "title": "Task 1",
+  "assignedTo": "user123"
+}
+
+👉 মানে আগের resolver (tasks) যেটা return করেছে সেই object
+
+📌 সহজভাবে
+
+👉 parent = আগের ধাপের result
+
+🧠 তোমার code এ
+Task: {
+  assignedTo: (parent, _, context) => {
+    return context.loaders.userLoader.load(
+      parent.assignedTo.toString()
+    );
+  }
+}
+
+👉 এখানে:
+
+parent.assignedTo
+
+= userId (যেটা Task এর মধ্যে আছে)
+
+🔥 Flow visualization
+Query.tasks()
+   ↓
+Task[] return
+   ↓
+Task.assignedTo(parent = Task)
+   ↓
+User return
+   ↓
+User.name(parent = User)
+⚠️ গুরুত্বপূর্ণ
+❌ parent ≠ context
+(parent, args, context)
+parameter	মানে
+parent	আগের data
+args	input
+context	global data (user, loaders)
+❌ Root resolver এ parent থাকে না
+Query: {
+  tasks: (parent) => {
+    console.log(parent); // undefined
+  }
+}
+🎯 Interview answer (বাংলায়)
+
+👉 যদি জিজ্ঞেস করে:
+
+"parent কী?"
+
+তুমি বলবে:
+
+parent হলো আগের resolver যেটা return করেছে সেই data, যেটা next resolver ব্যবহার করে।
+
+🚀 Pro Tip (important)
+
+👉 অনেক সময় DB call avoid করতে পারো:
+
+Task: {
+  assignedTo: (parent) => parent.assignedUser
+}
+
+👉 মানে আগে থেকেই data attach করলে extra query লাগবে না
