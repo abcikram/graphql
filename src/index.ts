@@ -7,15 +7,15 @@ import {
   ApolloServerPluginLandingPageProductionDefault,
 } from "apollo-server-core";
 
-
+ 
 export const createServer = () => {
   return new ApolloServer({
     typeDefs,
     resolvers,
-    context: createContext,
-    introspection: true,
+    context: createContext, 
+    introspection: true, 
 
-    plugins: [
+    plugins: [ 
       // Install a landing page plugin based on NODE_ENV
       process.env.NODE_ENV === "production"
         ? ApolloServerPluginLandingPageProductionDefault({

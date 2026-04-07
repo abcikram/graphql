@@ -1,22 +1,31 @@
 import { IncomingMessage } from "http";
 import { verifyToken } from "../modules/auth/auth.utils";
+import { createUserLoader } from "../modules/user/user.loader";
+import { AuthenticationError } from "apollo-server-errors";
+import { GraphQLError } from "graphql";
 
 export const createContext = ({ req }: { req: IncomingMessage }) => {
+  const authHeader = req.headers.authorization || "";
+
   let user = null;
 
-  const token = req.headers.authorization?.replace("Bearer ", "");
+  if (authHeader.startsWith("Bearer ")) {
+    const token = authHeader.split(" ")[1];
 
-  if (token) {
     try {
       user = verifyToken(token);
-    } catch {
-      user = null;
+    } catch (err) {
+      throw new GraphQLError("Invalid token", {
+        extensions: { code: "UNAUTHENTICATED" },
+      });
     }
   }
 
   return {
     req,
     user,
-    loaders: {},
+    loaders: {
+      userLoader: createUserLoader(),
+    },
   };
 };
