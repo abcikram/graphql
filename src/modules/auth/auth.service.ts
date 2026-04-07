@@ -2,7 +2,6 @@ import { SignupInput, LoginInput } from "./auth.types";
 
 import {
   hashPassword,
-  comparePassword,
   generateAccessToken,
   generateRefreshToken,
 } from "./auth.utils";
