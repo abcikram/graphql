@@ -6,4 +6,5 @@ export const ENV = {
   PORT: process.env.PORT || 4000,
   JWT_SECRET: process.env.JWT_SECRET || "secret",
   MONGO_URI: process.env.MONGO_URI!,
+  REDIS_URL: process.env.REDIS_URL || "",
 };

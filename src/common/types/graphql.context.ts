@@ -8,6 +8,7 @@ interface IContextUser {
 
 export interface GraphQLContext {
   user?: IContextUser;
+  req?: unknown;
   loaders: {
     userLoader: DataLoader<string, IUser>;
   };
