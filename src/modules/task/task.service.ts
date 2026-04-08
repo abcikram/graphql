@@ -1,3 +1,4 @@
+import { Types } from "mongoose";
 import { ERROR_CODES, throwError } from "../../common/errors";
 import { encodeCursor } from "../../utils/cursor";
 import { CreateTaskArgs, ITask } from "./interface/task.interface";
@@ -6,15 +7,15 @@ import { TaskRepository } from "./task.repository";
 export class TaskService {
   constructor(private taskRepo: TaskRepository) {}
 
-  async createTask(input: CreateTaskArgs, user: any) {
+  async createTask(input: CreateTaskArgs, userId: string): Promise<ITask> {
     try {
-      if (!user) {
+      if (!userId) {
         throwError("UNAUTHENTICATED", ERROR_CODES.UNAUTHENTICATED);
       }
       return this.taskRepo.create({
         title: input.title,
         assignedTo: input.assignedTo,
-        createdBy: user.id!,
+        createdBy: new Types.ObjectId(userId),
       });
     } catch (error: any) {
       throw new Error("Failed to create task");

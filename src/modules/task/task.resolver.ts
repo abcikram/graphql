@@ -18,7 +18,7 @@ export const taskResolvers = {
       context: GraphQLContext,
     ): Promise<ITask> => {
       authorize(["ADMIN"])(context);
-      return taskService.createTask({ title, assignedTo }, context.user!);
+      return taskService.createTask({ title, assignedTo }, context?.user?.id!);
     },
   },
 
