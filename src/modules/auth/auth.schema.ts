@@ -25,5 +25,8 @@ export const authTypeDefs = gql`
   extend type Mutation {
     signup(input: SignupInput!): AuthPayload!
     login(input: LoginInput!): AuthPayload!
+    logout(token: String!): Boolean!
+    logoutAll: Boolean!
+    refreshToken(token: String!): AuthPayload!
   }
 `;
