@@ -5,6 +5,7 @@ export const userTypeDefs = gql`
     id: ID!
     name: String!
     email: String!
+    roleIds: [ID!]!
   }
 
   type UserEdge {
@@ -24,5 +25,6 @@ export const userTypeDefs = gql`
 
   extend type Query {
     users(limit: Int!, cursor: String): UserConnection!
+      @auth(action: READ, resource: USER)
   }
 `;

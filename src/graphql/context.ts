@@ -1,7 +1,6 @@
 import { IncomingMessage } from "http";
 import { verifyToken } from "../modules/auth/auth.utils";
 import { createUserLoader } from "../modules/user/user.loader";
-import { AuthenticationError } from "apollo-server-errors";
 import { GraphQLError } from "graphql";
 
 export const createContext = ({ req }: { req: IncomingMessage }) => {

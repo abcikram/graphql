@@ -1,4 +1,3 @@
-import { authorize } from "../../common/middleware/authorize";
 import { taskService } from "../../container/task.container";
 import { GraphQLContext } from "../../common/types/graphql.context";
 import { ITask, CreateTaskArgs, TasksArgs } from "./interface/task.interface";
@@ -17,7 +16,6 @@ export const taskResolvers = {
       { title, assignedTo }: CreateTaskArgs,
       context: GraphQLContext,
     ): Promise<ITask> => {
-      authorize(["ADMIN"])(context);
       return taskService.createTask({ title, assignedTo }, context?.user?.id!);
     },
   },

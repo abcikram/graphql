@@ -26,8 +26,10 @@ export const taskTypeDefs = gql`
 
   extend type Query {
     tasks(first: Int!, after: String): TaskConnection!
+      @auth(action: READ, resource: TASK)
   }
   extend type Mutation {
     createTask(title: String!, assignedTo: ID!): Task!
+      @auth(action: CREATE, resource: TASK)
   }
 `;

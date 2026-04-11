@@ -3,7 +3,7 @@ import { IUser } from "../../modules/user/model/user.model";
 
 interface IContextUser {
   id: string;
-  role: string;
+  roleIds: string[];
 }
 
 export interface GraphQLContext {

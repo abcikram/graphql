@@ -2,13 +2,18 @@ import { IUser, UserModel } from "./model/user.model";
 
 export interface IUserRepository {
   findByEmail(email: string): Promise<IUser | null>;
+  findById(id: string): Promise<IUser | null>;
   create(data: any): Promise<IUser>;
   findAllPaginated(limit: number, cursor?: string): Promise<IUser[]>;
 }
 
 export class UserRepository implements IUserRepository {
   async findByEmail(email: string): Promise<IUser | null> {
-    return UserModel.findOne({ email }).select("+password");;
+    return UserModel.findOne({ email }).select("+password");
+  }
+
+  async findById(id: string): Promise<IUser | null> {
+    return UserModel.findById(id);
   }
 
   async create(data: any): Promise<IUser> {

@@ -41,7 +41,7 @@ export class AuthService implements IAuthService {
       name,
       email,
       password: hashed,
-      role: "USER",
+      roleIds: [],
     });
 
     return this.generateTokens(user);
@@ -71,7 +71,10 @@ export class AuthService implements IAuthService {
   }
 
   private async generateTokens(user: any) {
-    const payload = { id: user.id, role: user.role };
+    const payload = {
+      id: user.id,
+      roleIds: (user.roleIds || []).map((roleId: any) => roleId.toString()),
+    };
 
     const accessToken = generateAccessToken(payload);
     const refreshToken = generateRefreshToken(payload);

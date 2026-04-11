@@ -1,16 +1,11 @@
 import mongoose, { Document, Model, Schema } from "mongoose";
 import bcrypt from "bcryptjs";
 
-export enum UserRole {
-  USER = "USER",
-  ADMIN = "ADMIN",
-}
-
 export interface IUser extends Document {
   name: string;
   email: string;
   password: string;
-  role: UserRole;
+  roleIds: mongoose.Types.ObjectId[];
   createdAt: Date;
   updatedAt: Date;
 
@@ -39,12 +34,12 @@ const userSchema = new Schema<IUser>(
       required: true,
       select: false,
     },
-
-    role: {
-      type: String,
-      enum: Object.values(UserRole),
-      default: UserRole.USER,
-    },
+    roleIds: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Role",
+      },
+    ],
   },
   {
     timestamps: true,

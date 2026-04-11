@@ -1,4 +1,3 @@
-
 import { authorize } from "../../common/middleware/authorize";
 import { GraphQLContext } from "../../common/types/graphql.context";
 import { authService } from "../../container/auth.container";
@@ -16,7 +15,7 @@ export const authResolvers = {
       authService.logout(token),
     logoutAll: (_: unknown, __: unknown, context: GraphQLContext) => {
       authorize([])(context);
-      authService.logoutAll(context?.user?.id!);
+      return authService.logoutAll(context?.user?.id!);
     },
     refreshToken: async (_: unknown, { token }: { token: string }) => {
       const payload = await authService.refreshToken(token);
